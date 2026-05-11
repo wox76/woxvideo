@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoxVideo Editor</title>
+    <!-- Modern Normalize per una base solida cross-browser -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="top-nav">
+            <div class="nav-left">
+                <div class="workspace-btn">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Capcut_logo.png" alt="Logo"
+                        class="logo"
+                        onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23fff\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polygon points=\'22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3\'></polygon></svg>'">
+                    Menu <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="autosave"><i class="fa-solid fa-circle-check"></i> Auto saved: 09:56:24</div>
+                <div class="app-version" id="app-version">
+                    v1.4.1</div>
+            </div>
+            <div class="nav-center">
+                <div class="project-name">0812</div>
+            </div>
+            <div class="nav-right">
+                <button class="btn btn-icon"><i class="fa-regular fa-keyboard"></i> Shortcuts</button>
+                <div class="user-avatar" title="Login"><i class="fa-solid fa-user"></i></div>
+                <button class="btn btn-secondary"><i class="fa-solid fa-share"></i> Share</button>
+                <button class="btn btn-primary" id="btn-export-trigger"><i
+                        class="fa-solid fa-arrow-up-from-bracket"></i> Export</button>
+            </div>
+        </header>
+
+        <!-- Main Workspace Area -->
+        <main class="workspace">
+            <!-- Left Panel (Media / Assets) -->
+            <aside class="panel left-panel" id="left-panel">
+                <div class="tool-tabs">
+                    <div class="tab active" data-left-tab="import"><i
+                            class="fa-regular fa-folder-open"></i><span>Import</span></div>
+                    <div class="tab" data-left-tab="video"><i class="fa-solid fa-video"></i><span>Video</span></div>
+                    <div class="tab" data-left-tab="images"><i class="fa-regular fa-image"></i><span>Immagini</span>
+                    </div>
+                </div>
+
+                <div class="panel-content media-content">
+                    <div class="sidebar-sub">
+                        <ul class="sub-nav">
+                            <li class="active">Device Import</li>
+                        </ul>
+                    </div>
+                    <div class="items-grid-container">
+                        <div class="search-bar">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="Search...">
+                        </div>
+                        <div class="actions-bar" id="actions-bar">
+                            <div id="grid-source-title" class="grid-source-title" style="display:none;"></div>
+                            <button class="btn-import" id="btn-import"><i class="fa-solid fa-plus"></i> Import</button>
+                        </div>
+                        <div class="media-grid" id="media-grid">
+                            <!-- Items verranno caricati qui tramite JS -->
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- L/C Resizer -->
+            <div class="resizer resizer-x" id="resizer-left"></div>
+
+            <!-- Center Panel (Player) -->
+            <section class="panel center-panel" id="center-panel">
+                <div class="player-header">
+                    <span>Player</span>
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+                <div class="player-preview">
+                    <div class="player-viewport">
+                        <div class="viewport-content">
+                            <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&h=450&fit=crop"
+                                alt="Video frame" class="preview-img">
+                            <div class="preview-controls-overlay">
+                                <div class="refresh-icon"><i class="fa-solid fa-rotate-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="player-controls">
+                    <div class="time-display">
+                        <span class="current">00:01:40:13</span>
+                        <span class="total">00:02:42:08</span>
+                    </div>
+                    <div class="play-actions">
+                        <i class="fa-solid fa-play"></i>
+                    </div>
+                    <div class="view-actions">
+                        <i class="fa-solid fa-expand" id="btn-fullscreen" title="Fullscreen"></i>
+                        <span class="ratio-btn" id="btn-ratio">Ratio</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- C/R Resizer -->
+            <div class="resizer resizer-x" id="resizer-right"></div>
+
+            <!-- Right Panel (Properties) -->
+            <aside class="panel right-panel" id="right-panel">
+                <!-- TAB BAR -->
+                <div class="properties-tabs" id="right-tabs">
+                    <div class="tab active" data-tab="video">Video</div>
+                    <div class="tab" data-tab="audio">Audio</div>
+                    <div class="tab" data-tab="effects">Effetti</div>
+                    <div class="tab tab-disabled" data-tab="transitions" id="tab-btn-transitions"
+                        title="Seleziona 2 clip per abilitare">Transizioni</div>
+                </div>
+
+                <!-- VIDEO TAB -->
+                <div class="tab-content active" id="tab-video">
+                    <div class="properties-content">
+                        <!-- Video properties removed as requested -->
+                        <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 11px;">
+                            Nessuna proprietà video disponibile
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AUDIO TAB -->
+                <div class="tab-content" id="tab-audio">
+                    <div class="properties-content">
+                        <div class="accordion-section expanded">
+                            <div class="section-header toggle-section">
+                                <span>Volume</span>
+                                <div><i class="fa-solid fa-rotate-left reset-icon"></i> <i
+                                        class="fa-solid fa-chevron-up"></i></div>
+                            </div>
+                            <div class="section-body">
+                                <div class="prop-row">
+                                    <label>Livello</label>
+                                    <div class="slider-container">
+                                        <input type="range" value="100" min="0" max="200" class="slider">
+                                        <div class="value-box">100% <div><i class="fa-solid fa-sort"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="prop-row toggle-row">
+                                    <label>Mute</label>
+                                    <div class="toggle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EFFETTI TAB — content rendered by renderEffectsTab() in JS -->
+                <div class="tab-content" id="tab-effects">
+                </div>
+
+                <!-- TRANSIZIONI TAB — content rendered by renderTransitionsTab() in JS -->
+                <div class="tab-content" id="tab-transitions">
+                </div>
+
+            </aside>
+        </main>
+
+        <!-- Vertical Resizer -->
+        <div class="resizer resizer-y" id="resizer-timeline"></div>
+
+        <!-- Timeline Area -->
+        <footer class="timeline-area" id="timeline-area">
+            <div class="timeline-toolbar">
+                <div class="tools-left">
+                    <i class="fa-solid fa-arrow-pointer active-tool" id="tool-select" title="Selezione"></i>
+                    <i class="fa-solid fa-scissors" id="tool-trim" title="Cut"></i>
+                    <i class="fa-solid fa-eraser" id="tool-erase" title="Gomma"></i>
+                    <div class="divider"></div>
+                    <i class="fa-solid fa-rotate-left" id="tool-undo" title="Undo"></i>
+                    <i class="fa-solid fa-rotate-right" id="tool-redo" title="Redo"></i>
+                    <!-- Effetti + Transizioni vengono aggiunti via JS da initEffectsToolbar() -->
+                </div>
+                <div class="tools-right">
+                    <div class="zoom-slider">
+                        <i class="fa-solid fa-minus"></i>
+                        <input type="range" class="slider" value="40">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-container">
+                <div class="timeline-headers">
+                    <div class="track-header">
+                        <div class="track-controls"><i class="fa-solid fa-lock"></i> <i class="fa-solid fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="track-header main-video-track">
+                        <div class="track-controls"><i class="fa-solid fa-video"></i> <i
+                                class="fa-solid fa-volume-high"></i> <i class="fa-solid fa-link"></i></div>
+                    </div>
+                </div>
+
+                <div class="timeline-tracks">
+                    <div class="time-ruler">
+                        <span>| 00:00</span>
+                        <span>| 00:30</span>
+                        <span>| 01:00</span>
+                        <span>| 01:30</span>
+                        <span>| 02:00</span>
+                        <span>| 02:30</span>
+                        <span>| 03:00</span>
+                    </div>
+
+                    <div class="track text-track">
+                        <div class="clip text-clip" style="left: 12%; width: 10%;">nature</div>
+                    </div>
+
+                    <div class="track video-track">
+                        <div class="clip video-clip" style="left: 12%; width: 15%;">
+                            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=100&h=50&fit=crop"
+                                alt="thumb">
+                            <span>2028845-hd_1920_10...</span>
+                        </div>
+                        <div class="clip video-clip" style="left: 27%; width: 22%;">
+                            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=100&h=50&fit=crop"
+                                alt="thumb">
+                            <span>2028845-hd_1920_10...</span>
+                        </div>
+                        <div class="clip video-clip selected" style="left: 49%; width: 18%;">
+                            <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=100&h=50&fit=crop"
+                                alt="thumb">
+                            <span>4064718-hd_1920_10...</span>
+                        </div>
+                        <div class="clip video-clip" style="left: 67%; width: 22%;">
+                            <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=100&h=50&fit=crop"
+                                alt="thumb">
+                            <span>12582057-uhd_3840_...</span>
+                        </div>
+                    </div>
+
+                    <div class="playhead" style="left: 55%;">
+                        <div class="playhead-top"><i class="fa-solid fa-caret-down"></i></div>
+                        <div class="playhead-line"></div>
+                    </div>
+                    <!-- Playhead shadow area (lag preview) -->
+                    <div class="lag-preview" style="left: 35%; width: 20%;">
+                        <div class="tooltip">This part is not rendered and may lag during preview.</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Export Modal -->
+        <div id="export-modal" class="modal-overlay" style="display: none;">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Esporta Video</h3>
+                    <button class="btn btn-icon close-modal"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Formato / Codec</label>
+                        <select id="export-format">
+                            <option value="video/webm; codecs=vp9">MP4 (WebM/VP9) - Raccomandato WebGPU</option>
+                            <option value="video/webm; codecs=vp8">WebM (VP8)</option>
+                            <option value="video/webm">WebM (Default)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Risoluzione</label>
+                        <select id="export-resolution">
+                            <option value="1920x1080">1080p (1920x1080)</option>
+                            <option value="1280x720">720p (1280x720)</option>
+                            <option value="854x480">480p (854x480)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Framerate</label>
+                        <select id="export-fps">
+                            <option value="60">60 fps</option>
+                            <option value="30">30 fps</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer"
+                    style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <div id="export-status" style="font-size:12px; color:var(--text-muted); font-weight:bold;"></div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn close-modal">Annulla</button>
+                        <button class="btn btn-primary" id="start-export-btn">Avvia Export</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
